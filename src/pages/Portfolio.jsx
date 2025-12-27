@@ -1,26 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Portfolio = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [countdown, setCountdown] = useState(5);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Countdown timer
-    if (countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown(countdown - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else {
-      // Auto-redirect after countdown
-      window.open('https://edrahost-psi-silk.vercel.app/', '_blank');
-    }
-  }, [countdown]);
 
   const handleRedirect = () => {
     setIsLoading(true);
+    // Buka portfolio di tab baru
     window.open('https://edrahost-psi-silk.vercel.app/', '_blank');
     setTimeout(() => setIsLoading(false), 1000);
   };
@@ -52,7 +39,7 @@ const Portfolio = () => {
           
           <p style={styles.cardDescription}>
             Untuk melihat kumpulan lengkap proyek, studi kasus, dan hasil kerja, 
-            silakan kunjungi website portofolio utama.
+            silakan kunjungi website portofolio utama dengan menekan tombol di bawah.
           </p>
 
           {/* Website Info */}
@@ -85,24 +72,6 @@ const Portfolio = () => {
             </div>
           </div>
 
-          {/* Countdown Timer */}
-          {countdown > 0 && (
-            <div style={styles.countdownContainer}>
-              <p style={styles.countdownText}>
-                Mengarahkan ke portofolio dalam:{' '}
-                <span style={styles.countdownNumber}>{countdown}</span> detik
-              </p>
-              <div style={styles.progressBar}>
-                <div 
-                  style={{
-                    ...styles.progressFill,
-                    width: `${(5 - countdown) * 20}%`
-                  }} 
-                />
-              </div>
-            </div>
-          )}
-
           {/* Action Buttons */}
           <div style={styles.buttonGroup}>
             <button 
@@ -131,16 +100,7 @@ const Portfolio = () => {
             </button>
           </div>
 
-          {/* Important Note */}
-          <div style={styles.note}>
-            <div>
-              <p style={styles.noteTitle}>Catatan:</p>
-              <p style={styles.noteText}>
-                Website akan terbuka di tab baru. Pastikan pop-up blocker Anda 
-                tidak memblokir pembukaan tab baru.
-              </p>
-            </div>
-          </div>
+          
         </div>
 
         {/* Preview Section */}
@@ -165,59 +125,6 @@ const Portfolio = () => {
           </div>
         </div>
       </div>
-
-      {/* Global Styles */}
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.7; }
-        }
-        
-        .spinner {
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          border-top-color: #ffffff;
-          animation: spin 1s ease-in-out infinite;
-          margin-right: 8px;
-        }
-        
-        @media (max-width: 768px) {
-          .card {
-            padding: 30px 20px !important;
-          }
-          
-          .button-group {
-            flex-direction: column;
-            gap: 12px !important;
-          }
-          
-          .primary-button, .secondary-button {
-            width: 100% !important;
-          }
-          
-          .preview-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .title {
-            font-size: 1.8rem !important;
-          }
-          
-          .card-title {
-            font-size: 1.4rem !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };
@@ -332,45 +239,6 @@ const styles = {
     fontWeight: 'bold',
     fontSize: '1.1rem',
   },
-  countdownContainer: {
-    backgroundColor: 'rgba(74, 144, 226, 0.08)',
-    padding: '20px',
-    borderRadius: '12px',
-    marginBottom: '30px',
-  },
-  countdownText: {
-    color: 'rgba(0, 0, 0, 0.8)',
-    fontSize: '1rem',
-    marginBottom: '10px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-  },
-  countdownNumber: {
-    backgroundColor: '#4A90E2',
-    color: '#ffffff',
-    width: '30px',
-    height: '30px',
-    borderRadius: '50%',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: '700',
-    fontSize: '0.9rem',
-  },
-  progressBar: {
-    height: '6px',
-    backgroundColor: 'rgba(74, 144, 226, 0.2)',
-    borderRadius: '3px',
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#4A90E2',
-    borderRadius: '3px',
-    transition: 'width 1s linear',
-  },
   buttonGroup: {
     display: 'flex',
     gap: '16px',
@@ -408,6 +276,16 @@ const styles = {
     fontSize: '1.2rem',
     transition: 'transform 0.3s ease',
   },
+  spinner: {
+    display: 'inline-block',
+    width: '16px',
+    height: '16px',
+    border: '2px solid rgba(255, 255, 255, 0.3)',
+    borderRadius: '50%',
+    borderTopColor: '#ffffff',
+    animation: 'spin 1s ease-in-out infinite',
+    marginRight: '8px',
+  },
   note: {
     display: 'flex',
     alignItems: 'flex-start',
@@ -417,10 +295,6 @@ const styles = {
     borderRadius: '12px',
     border: '1px solid rgba(255, 193, 7, 0.2)',
     textAlign: 'left',
-  },
-  noteIcon: {
-    fontSize: '1.5rem',
-    flexShrink: 0,
   },
   noteTitle: {
     fontWeight: '600',
@@ -465,8 +339,13 @@ const styles = {
   },
 };
 
-// Add hover styles
-const hoverStyles = `
+// Add CSS animations and hover effects
+const cssStyles = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
   .primary-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
@@ -496,10 +375,42 @@ const hoverStyles = `
     transform: scale(1.1);
     transition: transform 0.3s ease;
   }
+  
+  @media (max-width: 768px) {
+    .card {
+      padding: 30px 20px !important;
+    }
+    
+    .button-group {
+      flex-direction: column;
+      gap: 12px !important;
+    }
+    
+    .primary-button, .secondary-button {
+      width: 100% !important;
+    }
+    
+    .preview-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title {
+      font-size: 1.8rem !important;
+    }
+    
+    .card-title {
+      font-size: 1.4rem !important;
+    }
+  }
 `;
 
-const styleSheet = document.createElement('style');
-styleSheet.textContent = hoverStyles;
-document.head.appendChild(styleSheet);
+// Apply styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = cssStyles;
+  document.head.appendChild(styleSheet);
+}
 
 export default Portfolio;
