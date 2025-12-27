@@ -110,6 +110,21 @@ const Services = () => {
         </div>
       </div>
 
+      {/* Disclaimer Section */}
+      <div style={styles.disclaimerSection}>
+        <div style={styles.disclaimerContent}>
+          <div style={styles.disclaimerIcon}></div>
+          <div style={styles.disclaimerText}>
+            <h3 style={styles.disclaimerTitle}>Disclaimer</h3>
+            <p style={styles.disclaimerMessage}>
+              Website ini dibuat menggunakan data statis tidak dalam bentuk dinamis. 
+              Harga dan layanan yang ditampilkan dapat berubah sewaktu-waktu. 
+              Hubungi kami untuk informasi selengkapnya dan konsultasi gratis.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <style jsx>{`
         @keyframes fadeIn {
           from {
@@ -140,6 +155,7 @@ const styles = {
   container: {
     padding: '140px 0 100px',
     backgroundColor: '#f8f9fa',
+    minHeight: '100vh',
   },
   header: {
     textAlign: 'center',
@@ -252,7 +268,7 @@ const styles = {
   processSection: {
     width: '90%',
     maxWidth: '1200px',
-    margin: '0 auto',
+    margin: '0 auto 60px',
     padding: '60px',
     backgroundColor: '#ffffff',
     borderRadius: '16px',
@@ -322,6 +338,42 @@ const styles = {
     backgroundColor: '#e0e0e0',
     zIndex: 1,
   },
+  // Disclaimer Section Styles
+  disclaimerSection: {
+    width: '90%',
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '30px',
+    backgroundColor: '#FFF9E6',
+    borderRadius: '12px',
+    border: '2px solid #FFE082',
+    boxShadow: '0 4px 20px rgba(255, 224, 130, 0.2)',
+  },
+  disclaimerContent: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '20px',
+  },
+  disclaimerIcon: {
+    fontSize: '2.5rem',
+    flexShrink: 0,
+    marginTop: '5px',
+  },
+  disclaimerText: {
+    flex: 1,
+  },
+  disclaimerTitle: {
+    fontSize: '1.3rem',
+    fontWeight: '600',
+    color: '#FF8C00',
+    marginBottom: '10px',
+  },
+  disclaimerMessage: {
+    fontSize: '1rem',
+    color: '#8B7355',
+    lineHeight: '1.6',
+    margin: 0,
+  },
 };
 
 // Add hover styles
@@ -340,6 +392,45 @@ const servicesHoverStyles = `
     color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+  }
+  
+  @media (max-width: 768px) {
+    .disclaimer-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 15px;
+    }
+    
+    .process-section {
+      padding: 40px 20px !important;
+    }
+    
+    .process-steps {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 20px !important;
+    }
+    
+    .step-connector {
+      display: none !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .process-steps {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .disclaimer-section {
+      padding: 20px 15px !important;
+    }
+    
+    .disclaimer-title {
+      font-size: 1.1rem !important;
+    }
+    
+    .disclaimer-message {
+      font-size: 0.9rem !important;
+    }
   }
 `;
 
