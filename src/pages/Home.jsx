@@ -73,7 +73,7 @@ const Home = () => {
   const stats = [
     { value: '99.9%', label: 'Uptime' },
     { value: '24/7', label: 'Support' },
-    { value: '50+', label: 'Klien Puas' },
+    { value: '3+', label: 'Klien Puas' },
     { value: '98%', label: 'Kepuasan' }
   ];
 
