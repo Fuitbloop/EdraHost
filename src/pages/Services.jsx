@@ -1,7 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Services = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = document.querySelectorAll('.fade-up, .fade-in');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const services = [
     {
@@ -37,85 +62,468 @@ const Services = () => {
     { number: '04', title: 'Launch', desc: 'Peluncuran & maintenance' },
   ];
 
-  return (
-    <div style={styles.container}>
-      {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>Layanan Kami</h1>
-        <p style={styles.subtitle}>
-          Solusi lengkap pembuatan website untuk berbagai kebutuhan bisnis
-        </p>
-      </div>
+  // Background image untuk hero section
+  const heroBackgroundImage = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80";
 
-      {/* Services Grid */}
-      <div style={styles.servicesGrid}>
-        {services.map((service) => (
-          <div
-            key={service.id}
-            style={{
-              ...styles.serviceCard,
-              transform: hoveredCard === service.id ? 'translateY(-10px)' : 'translateY(0)',
-            }}
-            onMouseEnter={() => setHoveredCard(service.id)}
-            onMouseLeave={() => setHoveredCard(null)}
-          >
-            <div style={styles.cardHeader}>
-              <div style={styles.iconContainer}>
-                <span style={styles.icon}>{service.icon}</span>
-              </div>
-              <div style={styles.cardTitleContainer}>
-                <h3 style={styles.cardTitle}>{service.title}</h3>
-                <div style={styles.priceTag}>{service.price}</div>
-              </div>
-            </div>
-            <p style={styles.cardDescription}>{service.description}</p>
-            <ul style={styles.featuresList}>
-              {service.features.map((feature, idx) => (
-                <li key={idx} style={styles.featureItem}>
-                  <span style={styles.checkIcon}>✓</span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            <button 
-              style={styles.orderButton}
-              onClick={() => window.location.href = '/kontak'}
-            >
-              Pesan Sekarang
-            </button>
+  const styles = {
+    // Container
+    container: {
+      width: '100%',
+      maxWidth: '1280px',
+      margin: '0 auto',
+      padding: '0 24px',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    // Hero Section
+    hero: {
+      padding: '160px 0 80px',
+      background: `linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95)), url(${heroBackgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      color: '#ffffff',
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    heroContent: {
+      maxWidth: '800px',
+      margin: '0 auto',
+      textAlign: 'center',
+      position: 'relative',
+      zIndex: 3,
+      opacity: isVisible ? 1 : 0,
+      transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+      transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+    },
+    heroTitle: {
+      fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+      fontWeight: '800',
+      lineHeight: '1.1',
+      marginBottom: '20px',
+      color: '#ffffff',
+      letterSpacing: '-0.02em',
+      textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
+    },
+    heroHighlight: {
+      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
+    },
+    heroSubtitle: {
+      fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+      color: 'rgba(255, 255, 255, 0.9)',
+      lineHeight: '1.7',
+      marginBottom: '40px',
+      maxWidth: '600px',
+      margin: '0 auto',
+      textShadow: '0 1px 5px rgba(0, 0, 0, 0.3)',
+    },
+
+    // Services Grid Section
+    servicesSection: {
+      padding: '120px 0',
+      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+    },
+    servicesHeader: {
+      textAlign: 'center',
+      marginBottom: '80px',
+    },
+    sectionTitle: {
+      fontSize: 'clamp(2rem, 4vw, 3rem)',
+      fontWeight: '800',
+      color: '#1a1a1a',
+      marginBottom: '20px',
+      letterSpacing: '-0.02em',
+    },
+    sectionSubtitle: {
+      fontSize: '1.25rem',
+      color: 'rgba(0, 0, 0, 0.6)',
+      maxWidth: '600px',
+      margin: '0 auto',
+      lineHeight: '1.6',
+    },
+    servicesGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+      gap: '40px',
+    },
+    serviceCard: {
+      background: 'rgba(255, 255, 255, 0.9)',
+      padding: '40px 32px',
+      borderRadius: '20px',
+      border: '1px solid rgba(226, 232, 240, 1)',
+      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.05)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+      overflow: 'hidden',
+      backdropFilter: 'blur(10px)',
+    },
+    cardHeader: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: '24px',
+      marginBottom: '24px',
+    },
+    iconContainer: {
+      width: '70px',
+      height: '70px',
+      background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
+      borderRadius: '16px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+      transition: 'all 0.3s ease',
+    },
+    icon: {
+      fontSize: '2.5rem',
+      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
+    },
+    cardTitleContainer: {
+      flex: 1,
+    },
+    cardTitle: {
+      fontSize: '1.5rem',
+      fontWeight: '700',
+      color: '#1a1a1a',
+      marginBottom: '8px',
+      lineHeight: '1.3',
+    },
+    cardDescription: {
+      color: 'rgba(0, 0, 0, 0.7)',
+      lineHeight: '1.6',
+      marginBottom: '28px',
+      flex: 1,
+      fontSize: '1.1rem',
+    },
+    featuresList: {
+      listStyle: 'none',
+      padding: 0,
+      marginBottom: '32px',
+    },
+    featureItem: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      color: 'rgba(0, 0, 0, 0.8)',
+      marginBottom: '12px',
+      fontSize: '1rem',
+    },
+    checkIcon: {
+      color: '#10b981',
+      fontWeight: 'bold',
+      fontSize: '1.2rem',
+      width: '24px',
+      height: '24px',
+      background: 'rgba(16, 185, 129, 0.1)',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    cardPrice: {
+      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+      color: '#ffffff',
+      padding: '12px 24px',
+      borderRadius: '12px',
+      fontSize: '1.1rem',
+      fontWeight: '700',
+      textAlign: 'center',
+      marginBottom: '20px',
+      boxShadow: '0 4px 15px rgba(37, 99, 235, 0.3)',
+    },
+    orderButton: {
+      background: 'transparent',
+      color: '#2563eb',
+      padding: '14px 32px',
+      borderRadius: '12px',
+      border: '2px solid #2563eb',
+      fontSize: '1rem',
+      fontWeight: '600',
+      cursor: 'pointer',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      textAlign: 'center',
+      marginTop: 'auto',
+      textDecoration: 'none',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    // Process Section
+    processSection: {
+      padding: '120px 0',
+      background: '#ffffff',
+    },
+    processHeader: {
+      textAlign: 'center',
+      marginBottom: '80px',
+    },
+    processTitle: {
+      fontSize: 'clamp(2rem, 4vw, 3rem)',
+      fontWeight: '800',
+      color: '#1a1a1a',
+      marginBottom: '20px',
+      letterSpacing: '-0.02em',
+    },
+    processSubtitle: {
+      fontSize: '1.25rem',
+      color: 'rgba(0, 0, 0, 0.6)',
+      maxWidth: '600px',
+      margin: '0 auto',
+      lineHeight: '1.6',
+    },
+    processSteps: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+      gap: '40px',
+      position: 'relative',
+    },
+    processStep: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center',
+      position: 'relative',
+    },
+    stepNumber: {
+      width: '80px',
+      height: '80px',
+      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+      color: '#ffffff',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '1.8rem',
+      fontWeight: '800',
+      marginBottom: '24px',
+      position: 'relative',
+      zIndex: 2,
+      boxShadow: '0 8px 25px rgba(37, 99, 235, 0.3)',
+    },
+    stepContent: {
+      flex: 1,
+    },
+    stepTitle: {
+      fontSize: '1.4rem',
+      fontWeight: '700',
+      color: '#1a1a1a',
+      marginBottom: '12px',
+    },
+    stepDesc: {
+      color: 'rgba(0, 0, 0, 0.7)',
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+    },
+    stepConnector: {
+      position: 'absolute',
+      top: '40px',
+      right: '-20px',
+      width: '40px',
+      height: '2px',
+      background: 'linear-gradient(90deg, #2563eb, #3b82f6)',
+      zIndex: 1,
+    },
+
+    // Disclaimer Section
+    disclaimerSection: {
+      padding: '80px 0 120px',
+      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+      color: '#ffffff',
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    disclaimerContent: {
+      maxWidth: '800px',
+      margin: '0 auto',
+      textAlign: 'center',
+      position: 'relative',
+      zIndex: 2,
+      padding: '48px',
+      background: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: '20px',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+    disclaimerIcon: {
+      fontSize: '3rem',
+      marginBottom: '24px',
+      display: 'inline-block',
+    },
+    disclaimerTitle: {
+      fontSize: '2rem',
+      fontWeight: '800',
+      marginBottom: '20px',
+      color: '#ffffff',
+      letterSpacing: '-0.02em',
+    },
+    disclaimerMessage: {
+      fontSize: '1.25rem',
+      color: 'rgba(255, 255, 255, 0.9)',
+      lineHeight: '1.7',
+      margin: 0,
+    },
+
+    // Hero Decoration
+    heroDecoration: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      overflow: 'hidden',
+      pointerEvents: 'none',
+    },
+    floatingCircle1: {
+      position: 'absolute',
+      top: '10%',
+      right: '5%',
+      width: '400px',
+      height: '400px',
+      background: 'radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%)',
+      borderRadius: '50%',
+      animationDelay: '0s',
+    },
+    floatingCircle2: {
+      position: 'absolute',
+      bottom: '10%',
+      left: '5%',
+      width: '300px',
+      height: '300px',
+      background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)',
+      borderRadius: '50%',
+      animationDelay: '2s',
+    },
+  };
+
+  return (
+    <>
+      {/* Hero Section */}
+      <section style={styles.hero}>
+        <div style={styles.container}>
+          <div style={styles.heroContent}>
+            <h1 style={styles.heroTitle}>
+              Layanan <span style={styles.heroHighlight}>Profesional</span>
+            </h1>
+            <p style={styles.heroSubtitle}>
+              Solusi lengkap pembuatan website untuk berbagai kebutuhan bisnis Anda. 
+              Kami menghadirkan website yang tidak hanya indah, tetapi juga fungsional.
+            </p>
           </div>
-        ))}
-      </div>
+        </div>
+        
+        {/* Decorative Background Elements */}
+        <div style={styles.heroDecoration}>
+          <div style={styles.floatingCircle1} className="floating" />
+          <div style={styles.floatingCircle2} className="floating" />
+        </div>
+      </section>
+
+      {/* Services Grid Section */}
+      <section style={styles.servicesSection}>
+        <div style={styles.container}>
+          <div style={styles.servicesHeader} className="fade-in">
+            <h2 style={styles.sectionTitle}>Paket Layanan Kami</h2>
+            <p style={styles.sectionSubtitle}>
+              Pilih paket yang sesuai dengan kebutuhan bisnis Anda
+            </p>
+          </div>
+          
+          <div style={styles.servicesGrid}>
+            {services.map((service, index) => (
+              <div
+                key={service.id}
+                className="fade-up service-card"
+                style={{
+                  ...styles.serviceCard,
+                  transform: hoveredCard === service.id ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
+                }}
+                onMouseEnter={() => setHoveredCard(service.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+                data-index={index}
+              >
+                <div style={styles.cardHeader}>
+                  <div style={styles.iconContainer} className="service-icon-container">
+                    <span style={styles.icon}>{service.icon}</span>
+                  </div>
+                  <div style={styles.cardTitleContainer}>
+                    <h3 style={styles.cardTitle}>{service.title}</h3>
+                  </div>
+                </div>
+                <p style={styles.cardDescription}>{service.description}</p>
+                <ul style={styles.featuresList}>
+                  {service.features.map((feature, idx) => (
+                    <li key={idx} style={styles.featureItem}>
+                      <span style={styles.checkIcon}>✓</span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <div style={styles.cardPrice}>
+                  {service.price}
+                </div>
+                <Link 
+                  to="/kontak" 
+                  style={styles.orderButton}
+                  className="order-button"
+                >
+                  Pesan Sekarang
+                  <span style={{ marginLeft: '8px', transition: 'transform 0.3s ease' }}>→</span>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Process Section */}
-      <div style={styles.processSection}>
-        <h2 style={styles.processTitle}>Proses Pengerjaan</h2>
-        <p style={styles.processSubtitle}>
-          Langkah-langkah sistematis untuk hasil terbaik
-        </p>
-        
-        <div style={styles.processSteps}>
-          {processSteps.map((step, index) => (
-            <div key={index} style={styles.processStep}>
-              <div style={styles.stepNumber}>{step.number}</div>
-              <div style={styles.stepContent}>
-                <h4 style={styles.stepTitle}>{step.title}</h4>
-                <p style={styles.stepDesc}>{step.desc}</p>
+      <section style={styles.processSection}>
+        <div style={styles.container}>
+          <div style={styles.processHeader} className="fade-in">
+            <h2 style={styles.processTitle}>Proses Pengerjaan</h2>
+            <p style={styles.processSubtitle}>
+              Langkah-langkah sistematis untuk hasil terbaik
+            </p>
+          </div>
+          
+          <div style={styles.processSteps}>
+            {processSteps.map((step, index) => (
+              <div 
+                key={index}
+                className="fade-up process-step"
+                style={styles.processStep}
+                data-index={index}
+              >
+                <div style={styles.stepNumber}>{step.number}</div>
+                <div style={styles.stepContent}>
+                  <h4 style={styles.stepTitle}>{step.title}</h4>
+                  <p style={styles.stepDesc}>{step.desc}</p>
+                </div>
+                {index < processSteps.length - 1 && (
+                  <div style={styles.stepConnector} className="step-connector" />
+                )}
               </div>
-              {index < processSteps.length - 1 && (
-                <div style={styles.stepConnector} />
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Disclaimer Section */}
-      <div style={styles.disclaimerSection}>
-        <div style={styles.disclaimerContent}>
-          <div style={styles.disclaimerIcon}></div>
-          <div style={styles.disclaimerText}>
-            <h3 style={styles.disclaimerTitle}>Disclaimer</h3>
+      <section style={styles.disclaimerSection}>
+        <div style={styles.container}>
+          <div style={styles.disclaimerContent} className="fade-in">
+            <div style={styles.disclaimerIcon}>⚠️</div>
+            <h3 style={styles.disclaimerTitle}>Penting untuk Diketahui</h3>
             <p style={styles.disclaimerMessage}>
               Website ini dibuat menggunakan data statis tidak dalam bentuk dinamis. 
               Harga dan layanan yang ditampilkan dapat berubah sewaktu-waktu. 
@@ -123,13 +531,19 @@ const Services = () => {
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
+      {/* Global Styles */}
       <style jsx>{`
-        @keyframes fadeIn {
+        @keyframes float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;
@@ -137,305 +551,222 @@ const Services = () => {
           }
         }
         
-        .service-card {
-          animation: fadeIn 0.6s ease-out forwards;
-          animation-delay: calc(var(--index) * 0.1s);
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
         
-        .process-step {
-          animation: fadeIn 0.6s ease-out forwards;
-          animation-delay: calc(var(--index) * 0.1s);
+        .fade-up {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .fade-up.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .fade-in {
+          opacity: 0;
+          animation: fadeIn 1s ease forwards;
+        }
+        
+        .fade-in.visible {
+          opacity: 1;
+        }
+        
+        .floating {
+          animation: float 8s ease-in-out infinite;
+        }
+        
+        /* Hover Effects */
+        .service-card:hover {
+          transform: translateY(-10px) scale(1.02) !important;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1) !important;
+          border-color: rgba(37, 99, 235, 0.3) !important;
+        }
+        
+        .service-card:hover .service-icon-container {
+          transform: scale(1.1) rotate(5deg) !important;
+          background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%) !important;
+        }
+        
+        .order-button:hover {
+          background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%) !important;
+          color: #ffffff !important;
+          transform: translateY(-3px) !important;
+          box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3) !important;
+          border-color: transparent !important;
+        }
+        
+        .order-button:hover span {
+          transform: translateX(5px) !important;
+        }
+        
+        .process-step:hover .step-number {
+          transform: scale(1.1) rotate(10deg) !important;
+          box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4) !important;
+        }
+        
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+          .hero {
+            padding: 140px 0 60px !important;
+            background-attachment: scroll !important;
+          }
+          
+          .hero-title {
+            font-size: 2.5rem !important;
+          }
+          
+          .hero-subtitle {
+            font-size: 1.1rem !important;
+          }
+          
+          .services-grid {
+            grid-template-columns: 1fr !important;
+            gap: 30px !important;
+          }
+          
+          .service-card {
+            padding: 32px 24px !important;
+          }
+          
+          .section-title, .process-title, .disclaimer-title {
+            font-size: 2.2rem !important;
+          }
+          
+          .services-section, .process-section {
+            padding: 80px 0 !important;
+          }
+          
+          .disclaimer-section {
+            padding: 60px 0 80px !important;
+          }
+          
+          .disclaimer-content {
+            padding: 32px 24px !important;
+          }
+          
+          .process-steps {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 30px !important;
+          }
+          
+          .step-connector {
+            display: none !important;
+          }
+          
+          .card-header {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            gap: 20px !important;
+          }
+          
+          .card-title {
+            text-align: center !important;
+          }
+          
+          .card-description {
+            text-align: center !important;
+          }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .services-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 30px !important;
+          }
+          
+          .hero-title {
+            font-size: 3.2rem !important;
+          }
+          
+          .process-steps {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          
+          .step-connector:nth-child(2n) {
+            display: none !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .hero {
+            padding: 120px 0 40px !important;
+          }
+          
+          .hero-title {
+            font-size: 2rem !important;
+            margin-bottom: 16px !important;
+          }
+          
+          .hero-subtitle {
+            font-size: 1rem !important;
+            margin-bottom: 30px !important;
+          }
+          
+          .services-section, .process-section {
+            padding: 60px 0 !important;
+          }
+          
+          .icon-container {
+            width: 60px !important;
+            height: 60px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .icon {
+            font-size: 2rem !important;
+          }
+          
+          .card-title {
+            font-size: 1.3rem !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .card-description {
+            font-size: 1rem !important;
+          }
+          
+          .section-title, .process-title, .disclaimer-title {
+            font-size: 1.8rem !important;
+            margin-bottom: 16px !important;
+          }
+          
+          .section-subtitle, .process-subtitle {
+            font-size: 1.1rem !important;
+            margin-bottom: 40px !important;
+          }
+          
+          .process-steps {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+          }
+          
+          .step-number {
+            width: 70px !important;
+            height: 70px !important;
+            font-size: 1.5rem !important;
+          }
+          
+          .step-title {
+            font-size: 1.2rem !important;
+          }
+          
+          .disclaimer-message {
+            font-size: 1.1rem !important;
+          }
         }
       `}</style>
-    </div>
+    </>
   );
 };
-
-const styles = {
-  container: {
-    padding: '140px 0 100px',
-    backgroundColor: '#f8f9fa',
-    minHeight: '100vh',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '60px',
-  },
-  title: {
-    fontSize: 'clamp(2rem, 4vw, 2.5rem)',
-    fontWeight: '700',
-    color: '#1a1a1a',
-    marginBottom: '16px',
-  },
-  subtitle: {
-    fontSize: '1.1rem',
-    color: 'rgba(0, 0, 0, 0.6)',
-    maxWidth: '600px',
-    margin: '0 auto',
-  },
-  servicesGrid: {
-    width: '90%',
-    maxWidth: '1200px',
-    margin: '0 auto 80px',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '30px',
-  },
-  serviceCard: {
-    backgroundColor: '#ffffff',
-    padding: '35px 30px',
-    borderRadius: '12px',
-    border: '1px solid rgba(0, 0, 0, 0.05)',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '20px',
-    marginBottom: '20px',
-  },
-  iconContainer: {
-    width: '60px',
-    height: '60px',
-    backgroundColor: 'rgba(74, 144, 226, 0.1)',
-    borderRadius: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  icon: {
-    fontSize: '2rem',
-  },
-  cardTitleContainer: {
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: '8px',
-  },
-  priceTag: {
-    display: 'inline-block',
-    backgroundColor: '#4A90E2',
-    color: '#ffffff',
-    padding: '6px 16px',
-    borderRadius: '20px',
-    fontSize: '0.9rem',
-    fontWeight: '600',
-  },
-  cardDescription: {
-    color: 'rgba(0, 0, 0, 0.6)',
-    lineHeight: '1.6',
-    marginBottom: '25px',
-    flex: 1,
-  },
-  featuresList: {
-    listStyle: 'none',
-    padding: 0,
-    marginBottom: '30px',
-  },
-  featureItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    color: 'rgba(0, 0, 0, 0.7)',
-    marginBottom: '10px',
-    fontSize: '0.95rem',
-  },
-  checkIcon: {
-    color: '#4A90E2',
-    fontWeight: 'bold',
-    fontSize: '1.1rem',
-  },
-  orderButton: {
-    backgroundColor: 'transparent',
-    color: '#4A90E2',
-    padding: '12px 24px',
-    borderRadius: '8px',
-    border: '2px solid #4A90E2',
-    fontSize: '1rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    textAlign: 'center',
-    marginTop: 'auto',
-  },
-  processSection: {
-    width: '90%',
-    maxWidth: '1200px',
-    margin: '0 auto 60px',
-    padding: '60px',
-    backgroundColor: '#ffffff',
-    borderRadius: '16px',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)',
-  },
-  processTitle: {
-    fontSize: '2rem',
-    fontWeight: '700',
-    color: '#1a1a1a',
-    textAlign: 'center',
-    marginBottom: '12px',
-  },
-  processSubtitle: {
-    fontSize: '1.1rem',
-    color: 'rgba(0, 0, 0, 0.6)',
-    textAlign: 'center',
-    marginBottom: '50px',
-  },
-  processSteps: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '30px',
-    position: 'relative',
-  },
-  processStep: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
-    position: 'relative',
-  },
-  stepNumber: {
-    width: '60px',
-    height: '60px',
-    backgroundColor: '#4A90E2',
-    color: '#ffffff',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '1.5rem',
-    fontWeight: '700',
-    marginBottom: '20px',
-    position: 'relative',
-    zIndex: 2,
-  },
-  stepContent: {
-    flex: 1,
-  },
-  stepTitle: {
-    fontSize: '1.25rem',
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: '8px',
-  },
-  stepDesc: {
-    color: 'rgba(0, 0, 0, 0.6)',
-    fontSize: '0.95rem',
-    lineHeight: '1.5',
-  },
-  stepConnector: {
-    position: 'absolute',
-    top: '30px',
-    right: '-15px',
-    width: '30px',
-    height: '2px',
-    backgroundColor: '#e0e0e0',
-    zIndex: 1,
-  },
-  // Disclaimer Section Styles
-  disclaimerSection: {
-    width: '90%',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '30px',
-    backgroundColor: '#FFF9E6',
-    borderRadius: '12px',
-    border: '2px solid #FFE082',
-    boxShadow: '0 4px 20px rgba(255, 224, 130, 0.2)',
-  },
-  disclaimerContent: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '20px',
-  },
-  disclaimerIcon: {
-    fontSize: '2.5rem',
-    flexShrink: 0,
-    marginTop: '5px',
-  },
-  disclaimerText: {
-    flex: 1,
-  },
-  disclaimerTitle: {
-    fontSize: '1.3rem',
-    fontWeight: '600',
-    color: '#FF8C00',
-    marginBottom: '10px',
-  },
-  disclaimerMessage: {
-    fontSize: '1rem',
-    color: '#8B7355',
-    lineHeight: '1.6',
-    margin: 0,
-  },
-};
-
-// Add hover styles
-const servicesHoverStyles = `
-  .service-card:hover {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  }
-  
-  .service-card:hover .icon-container {
-    transform: rotate(10deg) scale(1.1);
-    transition: all 0.3s ease;
-  }
-  
-  .order-button:hover {
-    background-color: #4A90E2;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
-  }
-  
-  @media (max-width: 768px) {
-    .disclaimer-content {
-      flex-direction: column;
-      text-align: center;
-      gap: 15px;
-    }
-    
-    .process-section {
-      padding: 40px 20px !important;
-    }
-    
-    .process-steps {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 20px !important;
-    }
-    
-    .step-connector {
-      display: none !important;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .process-steps {
-      grid-template-columns: 1fr !important;
-    }
-    
-    .disclaimer-section {
-      padding: 20px 15px !important;
-    }
-    
-    .disclaimer-title {
-      font-size: 1.1rem !important;
-    }
-    
-    .disclaimer-message {
-      font-size: 0.9rem !important;
-    }
-  }
-`;
-
-const servicesStyleSheet = document.createElement('style');
-servicesStyleSheet.textContent = servicesHoverStyles;
-document.head.appendChild(servicesStyleSheet);
 
 export default Services;

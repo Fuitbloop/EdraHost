@@ -17,7 +17,7 @@ const ScrollToTop = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth' // 'instant' untuk langsung
+      behavior: 'smooth'
     });
   }, [pathname]);
 
@@ -28,14 +28,14 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <ScrollToTop /> {/* Tambahkan di sini */}
+        <ScrollToTop />
         <Navbar />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/layanan" element={<Services />} />
             <Route path="/portofolio" element={<Portfolio />} />
-            <Route path="/tentang-kami" element={<About />} />
+            <Route path="/tentang-creator" element={<About />} />
             <Route path="/kontak" element={<Contact />} />
           </Routes>
         </main>
