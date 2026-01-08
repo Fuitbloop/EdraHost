@@ -63,7 +63,7 @@ const Portfolio = () => {
       title: 'Personal Portfolio',
       description: 'Website pribadi untuk menampilkan karya dan keahlian.',
       features: ['Animasi interaktif', 'Dark/Light mode', 'Contact form', 'Social media integration'],
-      link: 'https://example.com/portfolio',
+      link: 'https://edracreatordigital.vercel.app/',
       icon: '🎨'
     },
   ];
